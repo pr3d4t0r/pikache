@@ -1,7 +1,11 @@
-FROM                    python:latest
-MAINTAINER              pikache@cime.net
+# (c) Copyright 2021 Eugene Ciurana
+# License:  https://raw.githubusercontent.com/pr3d4t0r/pikache/master/LICENSE
 
 # vim: set fileencoding=utf-8:
+
+
+FROM                    python:latest
+MAINTAINER              pikache@cime.net
 
 LABEL                   author="Eugene Ciurana"
 LABEL                   copyright="(c) Copyright 2021 Eugene Ciurana"
