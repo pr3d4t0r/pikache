@@ -39,7 +39,7 @@ RUN                     chown devpi.devpi /home/devpi/.secret
 USER                    devpi
 
 # Debugging aid:
-ENTRYPOINT              /bin/bash -c "while true; do sleep 60; done"
+# ENTRYPOINT              /bin/bash -c "while true; do sleep 60; done"
 
-# ENTRYPOINT              /home/devpi/runserver
+ENTRYPOINT              /home/devpi/runserver
 

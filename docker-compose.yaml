@@ -12,7 +12,7 @@ services:
         image: 'pr3d4t0r/pikache:latest'
         ports:
             - '8041:8041'
-        user: devpi:${DEVPI_GROUP}
+        user: devpi:${DEVPI_USER}
         volumes:
             - '${HOME}/pikache/repository:/home/devpi/repository'
             - '${HOME}/pikache/devpi:/home/devpi/.devpi'
