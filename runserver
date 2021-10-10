@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# (c) Copyright 2021 Eugene Ciurana
+# License:  https://raw.githubusercontent.com/pr3d4t0r/pikache/master/LICENSE
+
+# vim: set fileencoding=utf-8:
+
+
+# *** functions ***
+
+function die {
+    echo "fatal error: $1"
+    exit "$2"
+} # die
+
+
+function initService {
+    [[ -e "$HOME/repository/.nodeinfo" ]] || devpi-init -c /etc/devpi-server/devpi-server.yaml
+} # initService
+
+
+function initSecret {
+    [[ -e /etc/devpi-server/secret ]] || devpi-gen-secret -c /etc/devpi-server/devpi-server.yaml
+} # initSecret
+
+
+function devpiRun {
+    devpi-server --configfile /etc/devpi-server/devpi-server.yaml --port 8041
+} # devpiRun
+
+
+# *** main ***
+
+initService
+initSecret
+devpiRun
+
+exit 0
+

@@ -1,0 +1,82 @@
+#!/bin/bash
+
+# (c) Copyright 2021 Eugene Ciurana
+# License:  https://raw.githubusercontent.com/pr3d4t0r/pikache/master/LICENSE
+
+# vim: set fileencoding=utf-8:
+
+
+# *** functions ***
+
+function die {
+    echo "$1"
+    exit "$2"
+} # die
+
+
+function checkDockerIsAvailable {
+    which docker-compose > /dev/null || die "docker-compose unavailable or not in path" 1
+} # checkDockerIsAvailable
+
+
+function checkDockerComposeFileExists {
+    [[ -e "./docker-compose.yaml" ]] || die "docker-compose.yaml is not present in pwd == $(pwd)" 2
+} # checkDockerComposeFileExists
+
+
+function setOwnership {
+    # Set ownership to the correct user:group to avoid conflicts
+    # between the internal Docker container user names and the 
+    # host's.
+    #
+    # This script resolves to the userID:groupID of the account
+    # from whence it was invoked.
+    #
+    # Documented method because Docker permissions and ownership
+    # kinda suck.
+    export DEVPI_USER=$(id -u)
+    export DEVPI_GROUP=$(id -g)
+} # setOwnership
+
+
+function _setPrivateIPAddress_macOS {
+    export DEVPI_PRIVATE_IP_ADDRESS=$(ifconfig | awk '/inet / && !/127\.0\.0\.1/ &&  /192\.168\./ { print($2); }')
+} # _setPrivateIPAddress_macOS 
+
+
+function _setPrivateIPAddress_Linux {
+    export DEVPI_PRIVATE_IP_ADDRESS=$(ip a | awk -F "[/ ]" '/inet / && / 192\.168\./ { print($6); }')
+} # _setPrivateIPAddress_Linux
+
+
+function setPrivateIPAddress {
+    local hostOS=$(uname)
+
+    [[ "Darwin" == "$hostOS" ]] && _setPrivateIPAddress_macOS
+    [[ "Linux" == "$hostOS" ]] && _setPrivateIPAddress_Linux
+
+    [[ -z "$DEVPI_PRIVATE_IP_ADDRESS" ]] && die "unable to resolve DEVPI_PRIVATE_IP_ADDRESS to a local IP address" 3
+} # setPrivateIPAddress
+
+
+function runPackageIndexServer {
+    local packageIndexContainer=$(docker ps | awk '$0 ~ "pikache\.cime\.dev" { print($NF); }')
+
+    if [[ -n "$packageIndexContainer" ]]
+    then
+        docker rm -f "$packageIndexContainer"
+    fi
+
+    env | awk '/DEVPI/' | sort
+    docker-compose up --remove-orphans --no-recreate -d || docker-compose rm -f 
+} # runPackageIndexServer
+
+
+# *** main ***
+
+checkDockerIsAvailable
+checkDockerComposeFileExists
+setPrivateIPAddress
+setOwnership
+runPackageIndexServer
+

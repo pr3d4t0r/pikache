@@ -1,0 +1,19 @@
+# (c) Copyright 2021 Eugene Ciurana
+# License:  https://raw.githubusercontent.com/pr3d4t0r/pikache/master/LICENSE
+
+# vim: set fileencoding=utf-8:
+
+
+version: '3'
+
+services:
+    pikache_devpi:
+        container_name: 'pikache_devpi'
+        image: 'pr3d4t0r/pikache:latest'
+        ports:
+            - '8041:8041'
+        user: devpi:${DEVPI_USER}
+        volumes:
+            - '${HOME}/pikache/repository:/home/devpi/repository'
+            - '${HOME}/pikache/devpi:/home/devpi/.devpi'
+
