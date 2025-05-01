@@ -4,13 +4,14 @@
 # vim: set fileencoding=utf-8:
 
 
-FROM                    python:latest
-MAINTAINER              pikache@cime.net
+ARG             PLATFORM="linux/amd64"
+FROM            --platform=$PLATFORM python:latest
 
-LABEL                   author="Eugene Ciurana"
-LABEL                   copyright="(c) Copyright 2021 Eugene Ciurana"
-LABEL                   description="Dockerized Package Index devpi server"
-LABEL                   support="pikache@cime.net"
+LABEL           maintainer="pikache AT cime.net"
+LABEL           author="Eugene Ciurana"
+LABEL           copyright="(c) Copyright 2021 Eugene Ciurana"
+LABEL           description="Dockerized Package Index devpi server"
+LABEL           support="pikache@cime.net"
 
 
 # devpi installation
@@ -39,7 +40,7 @@ RUN                     chown devpi.devpi /home/devpi/.secret
 USER                    devpi
 
 # Debugging aid:
-# ENTRYPOINT              /bin/bash -c "while true; do sleep 60; done"
+# ENTRYPOINT              [ "/bin/bash", "-c", "while true; do sleep 60; done" ]
 
-ENTRYPOINT              /home/devpi/runserver
+ENTRYPOINT              [ "/home/devpi/runserver" ]
 
