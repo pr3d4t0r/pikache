@@ -8,7 +8,7 @@ SHELL=/bin/bash
 
 
 DOCKER_IMAGE=pr3d4t0r/pikache
-DOCKER_VERSION=3.1.1
+DOCKER_VERSION=3.2.0
 DOCKER_INSTANCE=pikache_devpi
 
 include build.mk
